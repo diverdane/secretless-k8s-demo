@@ -1,0 +1,8 @@
+echo "Retrieving all pets..."
+wget --tries=1 \
+     --timeout=3 \
+     --server-response \
+     --quiet \
+     --output-document=/dev/stdout \
+     "${APPLICATION_URL}/pets"
+echo
