@@ -1,35 +1,25 @@
-FROM ubuntu:18.04
+FROM alpine:3.8 as secretless-k8s-demo
 
-# make systemd behave correctly in Docker container
-# (e.g. accept systemd.setenv args, etc.)
-ENV container docker
-
-ENV ARCH amd64
-ENV DIND_STORAGE_DRIVER vfs
-ENV DOCKER_IN_DOCKER_ENABLED "true"
-
-ENV DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && \
-    apt-get -y install \
-    aufs-tools \
-    bind9 \
-    bridge-utils \
+RUN apk add --no-cache \
+    bash \
     curl \
-    cgroupfs-mount \
-    dmsetup \
-    docker.io \
-    ipcalc \
-    iproute2 \
-    iputils-ping \
+    docker \
+    git \
     jq \
-    kmod \
-    liblz4-tool \
-    net-tools \
-    tcpdump \
+    shadow \
     vim \
-    wget && \
-    apt-get -y autoremove && \
-    apt-get clean
+    wget
+
+# Add Limited user
+RUN groupadd -r secretless \
+             -g 777 && \
+    useradd -c "secretless runner account" \
+            -g secretless \
+            -u 777 \
+            -m \
+            -r \
+            secretless && \
+    usermod -aG docker secretless
 
 # Clone CyberArk secretless-broker
 # TODO: Replace this with a filtered git clone to just retrieve the K8s
@@ -53,7 +43,8 @@ RUN curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0
     mv ./kind /usr/local/bin/kind
 
 COPY secretless_demo_runner /
-COPY scripts/add_pet scripts/list_pets /root/
+COPY scripts/ /root/
+
 ENV PATH="${PATH}:/root"
 
 ENTRYPOINT ["/bin/bash", "/secretless_demo_runner"]

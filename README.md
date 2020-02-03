@@ -21,7 +21,7 @@ that is configured for authentication.
 
 To run the demo, run the following command:
 ```
-docker run --rm --name secretless-demo-client -v /var/run/docker.sock:/var/run/docker.sock -it --privileged diverdane/secretless-k8s-demo
+docker run --rm --name secretless-demo-client -p 30303:8001 -v /var/run/docker.sock:/var/run/docker.sock -it diverdane/secretless-k8s-demo
 ```
 
 The container will:

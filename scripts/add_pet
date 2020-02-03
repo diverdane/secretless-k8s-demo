@@ -5,6 +5,6 @@ echo "Adding a sample pet named $1"
        --quiet \
        --output-document=/dev/stdout \
        --header "Content-Type: application/json" \
-       --post-data '{"name": "'$1'"}' \
+       --post-data '{"name": "'"$1"'"}' \
        "${APPLICATION_URL}/pet"
 
