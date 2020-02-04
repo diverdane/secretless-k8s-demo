@@ -6,6 +6,7 @@ RUN apk add --no-cache \
     docker \
     git \
     jq \
+    openssl \
     shadow \
     vim \
     wget
@@ -41,6 +42,15 @@ RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/v1.17.0/b
 RUN curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0.7.0/kind-linux-amd64 && \
     chmod +x ./kind && \
     mv ./kind /usr/local/bin/kind
+
+# Install helm
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 && \
+    chmod 700 get_helm.sh && \
+    ./get_helm.sh
+
+# Install Grafana helm charts
+RUN cd /root && \
+    git clone https://github.com/pivotal-cf/charts-grafana
 
 COPY secretless_demo_runner /
 COPY kind.yml scripts/ /root/
