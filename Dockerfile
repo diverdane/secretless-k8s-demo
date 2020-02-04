@@ -43,7 +43,7 @@ RUN curl -Lo ./kind https://github.com/kubernetes-sigs/kind/releases/download/v0
     mv ./kind /usr/local/bin/kind
 
 COPY secretless_demo_runner /
-COPY scripts/ /root/
+COPY kind.yml scripts/ /root/
 
 ENV PATH="${PATH}:/root"
 
